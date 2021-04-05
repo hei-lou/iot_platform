@@ -1,0 +1,77 @@
+netty:
+      port: 1883  #iot服务器端口
+      host: 0.0.0.0 #服务器绑定ip
+      heart: 180 #心跳
+      leak_detector_level: DISABLED #
+      boss_group_thread_count: 1
+      worker_group_thread_count: 20
+      max_payload_size: 65536
+      ssl:
+        enable: false  #开启ssl
+        jksFile:  # ssl 加密 jks文件地址
+        jksStorePassword: # 读取jks密码
+        jksCertificatePassword:  # 读取私钥密码
+
+dubbo:
+  application:
+    id: heilou-iot
+    name: heilou-iot  #应用名称
+  registry:
+    id: zookeeper-registry #注册中心id
+    protocol: zookeeper    #注册中心协议
+    address: zookeeper://127.0.0.1:2181 #注册中心地址
+  metadata-report:
+    address: zookeeper://127.0.0.1:2181
+  protocol:
+    name: dubbo   #协议名称
+    port: 20880   #协议端口
+    accesslog: /app/logs/dubbo/dubbo-access.log #协议访问log
+  provider:
+    retries: 0    #重试次数
+    timeout: 3000 #超时时间
+  monitor:
+    protocol: registry # 注册监控中心
+
+#data source
+spring:
+  main:
+    web-application-type: none
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/heilou?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: "@heilou123"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: "@heilou123"
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+
+mybatis:
+  mapperLocations: classpath*:mapper/*.xml
+
+#pagehelper分页插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params=count: countSql

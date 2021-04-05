@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heilou.iot.db.mapper.DeviceStatusDataMapper">
+  <resultMap id="BaseResultMap" type="com.heilou.iot.db.model.DeviceStatusData">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="device_id" jdbcType="CHAR" property="deviceId" />
+    <result column="open" jdbcType="CHAR" property="open" />
+    <result column="pattern" jdbcType="CHAR" property="pattern" />
+    <result column="wind" jdbcType="CHAR" property="wind" />
+    <result column="mesh_cycle" jdbcType="INTEGER" property="meshCycle" />
+    <result column="pm25" jdbcType="VARCHAR" property="pm25" />
+    <result column="tvoc" jdbcType="CHAR" property="tvoc" />
+    <result column="co2" jdbcType="VARCHAR" property="co2" />
+    <result column="child_lock" jdbcType="CHAR" property="childLock" />
+    <result column="temperature" jdbcType="VARCHAR" property="temperature" />
+    <result column="humidity" jdbcType="VARCHAR" property="humidity" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, device_id, open, pattern, wind, mesh_cycle, pm25, tvoc, co2, child_lock, temperature, 
+    humidity, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from device_status_data
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from device_status_data
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.heilou.iot.db.model.DeviceStatusData">
+    insert into device_status_data (id, device_id, open, pattern, 
+      wind, mesh_cycle, pm25, 
+      tvoc, co2, child_lock, temperature, 
+      humidity, create_time, update_time
+      )
+    values (#{id,jdbcType=CHAR}, #{deviceId,jdbcType=CHAR}, #{open,jdbcType=CHAR}, #{pattern,jdbcType=CHAR}, 
+      #{wind,jdbcType=CHAR}, #{meshCycle,jdbcType=INTEGER}, #{pm25,jdbcType=VARCHAR}, 
+      #{tvoc,jdbcType=CHAR}, #{co2,jdbcType=VARCHAR}, #{childLock,jdbcType=CHAR}, #{temperature,jdbcType=VARCHAR}, 
+      #{humidity,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heilou.iot.db.model.DeviceStatusData">
+    update device_status_data
+    <set>
+      <if test="open != null">
+        open = #{open,jdbcType=CHAR},
+      </if>
+      <if test="pattern != null">
+        pattern = #{pattern,jdbcType=CHAR},
+      </if>
+      <if test="wind != null">
+        wind = #{wind,jdbcType=CHAR},
+      </if>
+      <if test="meshCycle != null">
+        mesh_cycle = #{meshCycle,jdbcType=INTEGER},
+      </if>
+      <if test="pm25 != null">
+        pm25 = #{pm25,jdbcType=VARCHAR},
+      </if>
+      <if test="tvoc != null">
+        tvoc = #{tvoc,jdbcType=CHAR},
+      </if>
+      <if test="co2 != null">
+        co2 = #{co2,jdbcType=VARCHAR},
+      </if>
+      <if test="childLock != null">
+        child_lock = #{childLock,jdbcType=CHAR},
+      </if>
+      <if test="temperature != null">
+        temperature = #{temperature,jdbcType=VARCHAR},
+      </if>
+      <if test="humidity != null">
+        humidity = #{humidity,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heilou.iot.db.model.DeviceStatusData">
+    update device_status_data
+    set
+      open = #{open,jdbcType=CHAR},
+      pattern = #{pattern,jdbcType=CHAR},
+      wind = #{wind,jdbcType=CHAR},
+      mesh_cycle = #{meshCycle,jdbcType=INTEGER},
+      pm25 = #{pm25,jdbcType=VARCHAR},
+      tvoc = #{tvoc,jdbcType=CHAR},
+      co2 = #{co2,jdbcType=VARCHAR},
+      child_lock = #{childLock,jdbcType=CHAR},
+      temperature = #{temperature,jdbcType=VARCHAR},
+      humidity = #{humidity,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

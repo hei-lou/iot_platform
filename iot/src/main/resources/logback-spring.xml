@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+<configuration debug="true" scan="true" scanPeriod="30 seconds"><!-- 'milliseconds','seconds','minutes' and 'hours' -->
+	<Property name="log.path" value="/app/logs/iot" />
+	<Property name="log.level" value="INFO" />
+	<Property name="patternTemplate" value="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] [%thread] %logger{50}: - %msg%n" />
+	<jmxConfigurator />
+	<shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+	<!-- 控制台输出日志 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>${patternTemplate}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 文件输出日志 (文件大小策略进行文件输出，超过指定大小对文件备份) -->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--
+	    当发生滚动时，决定 RollingFileAppender 的行为，涉及文件移动和重命名
+	    TimeBasedRollingPolicy： 最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动。
+	    -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!--
+			滚动时产生的文件的存放位置及文件名称 %d{yyyy-MM-dd}：按天进行日志滚动
+			%i：当文件大小超过maxFileSize时，按照i进行文件滚动
+			-->
+			<fileNamePattern>${log.path}/%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+			<!--
+			可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件。假设设置每天滚动，
+			且maxHistory是365，则只保存最近365天的文件，删除之前的旧文件。注意，删除旧文件是，
+			那些为了归档而创建的目录也会被删除。
+			-->
+			<MaxHistory>30</MaxHistory>
+			<!--
+			当日志文件超过maxFileSize指定的大小是，根据上面提到的%i进行日志文件滚动 注意此处配置SizeBasedTriggeringPolicy是无法实现按文件大小进行滚动的，必须配置timeBasedFileNamingAndTriggeringPolicy
+			-->
+			<maxFileSize>50MB</maxFileSize>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>${patternTemplate}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 异步输出 -->
+	<appender name ="ASYNC" class= "ch.qos.logback.classic.AsyncAppender">
+		<!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+		<discardingThreshold>20</discardingThreshold>
+		<!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+		<queueSize>2048</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<neverBlock>true</neverBlock>
+		<!-- 停应用时最多等待多少毫秒处理queue中日志,暂定10秒 -->
+		<maxFlushTime>10000</maxFlushTime>
+		<!-- 添加附加的appender,最多只能添加一个 -->
+		<appender-ref ref ="FILE"/>
+	</appender>
+
+
+	<root level="${log.level}">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ASYNC" />
+	</root>
+	<!--这里指定logger name 是为jmx设置日志级别做铺垫 -->
+	<logger name="org.apache.ibatis.logging" additivity="true" level="info" />
+	<logger name="org.apache.tomcat.util.net" additivity="true" level="error" />
+	<logger name="org.springframework" additivity="true" level="info" />
+	<logger name="com.heilou.web" level="DEBUG"/>
+</configuration>
