@@ -20,7 +20,12 @@ public class PublishPacket {
         byte[] messageBytes = new byte[msg.payload().readableBytes()];
         msg.payload().getBytes(msg.payload().readerIndex(), messageBytes);
         log.info("publish msg deviceId：{}, msg: {}", ChannelAttributeHelper.getClientId(channel), new String(messageBytes));
-        this.sendPubAckMessage(channel, msg.variableHeader().packetId());
+        if(msg.fixedHeader().qosLevel() == MqttQoS.AT_LEAST_ONCE){
+            this.sendPubAckMessage(channel, msg.variableHeader().packetId());
+        }
+        if (msg.fixedHeader().qosLevel() == MqttQoS.EXACTLY_ONCE) {
+            this.sendPubRecMessage(channel, msg.variableHeader().packetId());
+        }
         //        // QoS=0
 //        if (msg.fixedHeader().qosLevel() == MqttQoS.AT_MOST_ONCE) {
 //            byte[] messageBytes = new byte[msg.payload().readableBytes()];
