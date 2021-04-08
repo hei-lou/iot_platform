@@ -1,11 +1,18 @@
 package com.heilou.common.utils;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 
 import java.io.InputStream;
+import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.time.LocalDateTime;
+import java.util.Scanner;
 
 /**
  * @description: 加密工具类
@@ -29,9 +36,9 @@ public class RsaKeyUtil {
      * 生成私钥文件
      */
     public static void main(String[] args)  {
-        RSA rsa = new RSA(RsaKeyUtil.getRSAPrivateKey(),null);
-        String value = rsa.encryptBcd("test", KeyType.PrivateKey);
-        System.out.println(value);
+//        RSA rsa = new RSA(RsaKeyUtil.getRSAPrivateKey(),null);
+//        String value = rsa.encryptBcd("123456", KeyType.PrivateKey);
+//        System.out.println(value);
 //        System.out.println();
 //        System.out.print("输入保存密钥文件的路径(如: f:/rsa/): ");
 //        Scanner scanner = new Scanner(System.in);
